@@ -50,20 +50,35 @@ def load_images(path):
 
 images = load_images("Dataset_Faces/*.jpg")
 
-mask_path = 'Dataset_Faces_Mask' 
-if not os.path.exists(mask_path):
-    os.makedirs(mask_path)
+mask_path_training = 'Dataset_Faces_Mask_training' 
+if not os.path.exists(mask_path_training):
+    os.makedirs(mask_path_training)
 
-segmentation_path = 'Dataset_Faces_Segmented' 
-if not os.path.exists(segmentation_path):
-    os.makedirs(segmentation_path)
+mask_path_validation = 'Dataset_Faces_Mask_validation' 
+if not os.path.exists(mask_path_validation):
+    os.makedirs(mask_path_validation)
+
+segmentation_path_training = 'Dataset_Faces_training' 
+if not os.path.exists(segmentation_path_training):
+    os.makedirs(segmentation_path_training)
+
+segmentation_path_validation = 'Dataset_Faces_validation' 
+if not os.path.exists(segmentation_path_validation):
+    os.makedirs(segmentation_path_validation)
 
 c = 1
 
 for image in images:
-    segmentation = Iris_Segmentation(image)
+    img = image.copy()
+    segmentation = Iris_Segmentation(img)
 
-    cv.imwrite(mask_path + "/"+ str(c)+ ".jpg", segmentation[0])
-    cv.imwrite(segmentation_path + "/"+ str(c)+ ".jpg", segmentation[1])
+    if c <= 800:
+        cv.imwrite(mask_path_training + "/"+ str(c)+ ".jpg", segmentation[0])
+        #cv.imwrite(segmentation_path_training + "/"+ str(c)+ ".jpg", segmentation[1])
+        cv.imwrite(segmentation_path_training + "/"+ str(c)+ ".jpg", image)
+    else:
+        cv.imwrite(mask_path_validation + "/"+ str(c)+ ".jpg", segmentation[0])
+        #cv.imwrite(segmentation_path_validation + "/"+ str(c)+ ".jpg", segmentation[1])
+        cv.imwrite(segmentation_path_validation + "/"+ str(c)+ ".jpg", image)
 
     c += 1
